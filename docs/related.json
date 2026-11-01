@@ -1,0 +1,40 @@
+{
+  "schema_version": "related-research/v1",
+  "capability_id": "delivery-packager",
+  "reviewed_at": "2026-11-01",
+  "scope": "Curated public primary-source research, not installed integrations or partnerships.",
+  "sources": [
+    {
+      "title": "BagIt (RFC 8493)",
+      "url": "https://www.rfc-editor.org/rfc/rfc8493",
+      "category": "specification",
+      "relationship": "inspiration",
+      "relevance": "Separates payload bytes and descriptive metadata with checksums. This package is a small ZIP delivery contract, not a BagIt implementation.",
+      "reuse": "No specification text or implementation copied; no conformance claim."
+    },
+    {
+      "title": "Python zipfile",
+      "url": "https://docs.python.org/3/library/zipfile.html",
+      "category": "open-source engine",
+      "relationship": "actual engine reuse",
+      "relevance": "The existing Python standard library writes and reads stored ZIP entries. Delivery Packager adds bounded allowlists, declarations and approval binding.",
+      "reuse": "Imported from the caller runtime; no CPython implementation is vendored. Python runtime has its own license."
+    },
+    {
+      "title": "Library of Congress bagit-python",
+      "url": "https://github.com/LibraryOfCongress/bagit-python",
+      "category": "open-source tool",
+      "relationship": "alternative",
+      "relevance": "Choose this for creating or validating BagIt directory packages. No bagit-python dependency or interoperability is implemented here.",
+      "reuse": "No code copied or installed; project metadata declares Public Domain, not an adoption or legal clearance claim."
+    },
+    {
+      "title": "RO-Crate",
+      "url": "https://www.researchobject.org/ro-crate/",
+      "category": "community specification",
+      "relationship": "complement",
+      "relevance": "Research-data metadata interchange may be useful for a future explicit export. This archive does not implement the RO-Crate format.",
+      "reuse": "Research only; no specification text or code copied."
+    }
+  ]
+}

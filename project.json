@@ -1,0 +1,7 @@
+{
+  "id": "delivery-packager",
+  "title": "Delivery Packager",
+  "description": "Package exactly an approved local asset allowlist with author declarations and byte-integrity metadata.",
+  "version": "0.1.0",
+  "license": "MIT"
+}

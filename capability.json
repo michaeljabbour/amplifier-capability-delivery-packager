@@ -1,0 +1,82 @@
+{
+  "contract_version": "amplifier-capability/v1",
+  "id": "delivery-packager",
+  "name": "amplifier-capability-delivery-packager",
+  "display_name": "Delivery Packager",
+  "version": "0.1.0",
+  "legacy_names": [],
+  "kind": "tool",
+  "engine": "None",
+  "engine_components": {
+    "native": "None; Python standard-library ZIP/hash/file operations"
+  },
+  "promise": "Package exactly an approved local asset allowlist with author declarations and byte-integrity metadata.",
+  "surfaces": [
+    "cli",
+    "python-library"
+  ],
+  "interfaces": {
+    "portable": null,
+    "native": {
+      "entrypoint": "delivery_packager.py",
+      "commands": [
+        "preview",
+        "build",
+        "verify"
+      ],
+      "library": [
+        "preview",
+        "build",
+        "verify",
+        "Limits"
+      ],
+      "contract": "delivery-plan/v1 and delivery-package/v1; explicit preview fingerprint required for build"
+    },
+    "host_adapters": {
+      "grants_autonomy": false
+    }
+  },
+  "permissions": {
+    "installation": {
+      "network": false,
+      "executes_capability_code": false,
+      "grants_runtime_permissions": false,
+      "writes": [
+        "Explicit selected native-file or discovery destination only"
+      ]
+    },
+    "runtime": {
+      "network": false,
+      "publishes": false,
+      "writes": "One new archive plus temporary private staging at explicitly selected existing destination; no overwrite.",
+      "host_model_context": "No model or provider."
+    },
+    "secret_names": {
+      "discovery_requires": [],
+      "runtime_requires": []
+    }
+  },
+  "dataflow": {
+    "installation": "Pinned tracked source only; no automatic account or provider configuration.",
+    "runtime": "Selected local regular files enter a new local ZIP; a local verifier reads it without extraction or upload."
+  },
+  "source_policy": {
+    "revision": "Use an explicit full Git commit.",
+    "research": ".research/market is ignored local material; public cards are separately curated.",
+    "rights": "Original MIT code and methods; user material retains its own rights.",
+    "provenance": "See PROVENANCE.md."
+  },
+  "dependencies": {
+    "required": [],
+    "optional_handoffs": [
+      "Project Handoff",
+      "ArticleCraft",
+      "Idea Talks",
+      "Stories"
+    ]
+  },
+  "repository_url": "https://github.com/michaeljabbour/amplifier-capability-delivery-packager",
+  "guide_url": "https://michaeljabbour.github.io/capabilities/delivery-packager/",
+  "install_url": "https://michaeljabbour.github.io/capabilities/delivery-packager/#setup",
+  "publication_status": "Prepared local source; owner separately verifies and publishes repository and guide."
+}

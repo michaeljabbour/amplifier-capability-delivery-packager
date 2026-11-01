@@ -1,0 +1,41 @@
+{
+  "schema_version": "shape-assessment/v1",
+  "capability_id": "delivery-packager",
+  "status": "design-assessment-not-empirical-efficacy",
+  "need": {
+    "N1_path": 0,
+    "N2_context": 0,
+    "N3_presence": 1,
+    "N4_initiative": 0,
+    "total": 1
+  },
+  "selected": {
+    "rung": 1,
+    "shape": "Tool",
+    "engine": "None"
+  },
+  "harness": {
+    "H1_independent_verification": 0,
+    "H2_specialists": 0,
+    "H3_portability": 1,
+    "H4_size": 0,
+    "total": 1,
+    "decision": "Single capability, not an orchestration harness"
+  },
+  "gates": {
+    "G1": "Automatic bounded byte/contract checks; rights/accessibility outside promise",
+    "G2": "New local output, no overwrite",
+    "G3": "Host private-context policy unassessed; no outbound tool added",
+    "G4": "Bounded POSIX file containment; same-user arbitrary attackers not covered",
+    "G5": "File/byte limits; no provider or model routing",
+    "G6": "Actual person/operator owns consent and decisions; record is not authority"
+  },
+  "replaceability": {
+    "R1": "Versioned public contract",
+    "R2": "Commodity standard-library engine",
+    "R3": "One coherent job",
+    "R4": "Credentials and identity outside interface",
+    "R5": "Future manual ZIP/manifest comparison"
+  },
+  "evidence": "Local software tests only; human usefulness and transfer unrun"
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": "delivery-plan/v1",
+  "title": "Fictional repair-club handoff",
+  "owner": "Fictional club curator",
+  "approval_reference": "Fictional author explicitly approved these two example files for a local review ZIP",
+  "destination": {
+    "label": "Fictional coordinator review",
+    "status": "not_sent",
+    "evidence_ref": null
+  },
+  "next_action": "Review the plan and source text; request distribution permission separately",
+  "unresolved_limits": [
+    "Not sent; rights/accessibility are declarations only"
+  ],
+  "assets": [
+    {
+      "path": "draft.txt",
+      "role": "editable",
+      "credits": [
+        "Fictional Repair Club author"
+      ],
+      "license": "MIT declared for this fictional example",
+      "accessibility": "Plain text; no affected-user study"
+    },
+    {
+      "path": "final.txt",
+      "role": "final",
+      "credits": [
+        "Fictional Repair Club author"
+      ],
+      "license": "MIT declared for this fictional example",
+      "accessibility": "Plain text; no affected-user study"
+    }
+  ]
+}

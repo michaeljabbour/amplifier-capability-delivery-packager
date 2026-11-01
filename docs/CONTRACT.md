@@ -1,0 +1,9 @@
+# Local delivery contract v1
+
+`delivery-plan/v1` is a closed JSON object: `title`, `owner`, `approval_reference`, `next_action` are nonempty text; `unresolved_limits` is a bounded list; `destination` has label/status/evidence_ref; `assets` is a nonempty allowlist. Each asset has a literal portable relative path, editable/final role, nonempty credits, license and accessibility declaration. A reported_sent/reported_received declaration needs a reference; unknown/not_sent has null evidence. Nothing here verifies a delivery.
+
+Paths have at most 2000 characters and 32 components, no traversal, globs, symlinks or private `.git`, `.research`, `.env*`, `__pycache__` components. Only regular files are read. A declared source or destination root cannot itself be a symlink; ancestor aliases are canonicalized before no-follow descriptor walking. Nested symlink assets are refused. Destination must exist and the output name must be a single `.zip` filename.
+
+`preview(root,plan,destination,name,limits)` returns a read-only manifest and root/destination/content-bound approval SHA. `build(...,expected_plan_sha256,limits)` rechecks, streams and verifies selected bytes, and atomically creates a new archive without overwrite. It uses a private temporary directory and reports cleanup warnings. `verify(archive,expected_sha256,limits)` validates bounded regular stored entries, declarations, inventory, payload hashes and stable read metadata without extraction. An external trusted SHA is optional but necessary for authenticity against wholesale replacement; the tool does not provide signatures.
+
+Limits are distinct: payload 1–512 MiB (default 64 MiB), file count 1–128 (default 128), plan and manifest each256 KiB. ZIP filename/header overhead has a separate conservative bound derived from validated name lengths. Record schema is stable under v1; incompatible field or semantics changes require a new version.

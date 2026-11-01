@@ -1,0 +1,16 @@
+{
+  "status": "authored-unrun",
+  "not_a_quality_score": true,
+  "cases": [
+    {
+      "id": "recipient-independent",
+      "task": "A fresh recipient verifies the digest received separately, identifies editable source and owner/next action, and reports one missing declaration.",
+      "needs": "Authentic voluntary recipient and approved fictional input; no outreach has occurred."
+    },
+    {
+      "id": "approved-new-type",
+      "task": "A fresh operator packages an unfamiliar mixed text/image set under a fresh allowlist and destination; attempts a source change after approval.",
+      "needs": "New fixture/operator and separately recorded outcomes; do not tune against this file."
+    }
+  ]
+}
