@@ -48,6 +48,33 @@ class DeliveryTests(unittest.TestCase):
         self.assertEqual(dp.verify(self.dest/'handoff.zip',result['sha256'])['status'],'verified')
     def test_deterministic_archive_bytes_for_same_plan_content(self):
         self.build();first=(self.dest/'handoff.zip').read_bytes();(self.dest/'handoff.zip').unlink();self.build();self.assertEqual(first,(self.dest/'handoff.zip').read_bytes())
+    def test_recipient_summary_is_opt_in_and_bound_to_verified_declarations(self):
+        result=self.build();archive=self.dest/'handoff.zip'
+        self.assertNotIn('handoff',dp.verify(archive,result['sha256']))
+        summary=dp.verify(archive,result['sha256'],show_handoff=True)['handoff']
+        self.assertEqual(summary['declared_owner'],self.plan['owner'])
+        self.assertEqual(summary['editable_files'],['draft.txt'])
+        self.assertEqual(summary['final_files'],['final/read me.txt'])
+        self.assertEqual(summary['next_action'],self.plan['next_action'])
+        self.assertEqual(summary['unresolved_limits'],self.plan['unresolved_limits'])
+        self.assertFalse(summary['declarations_verified'])
+        self.assertNotIn('not-approved.txt',json.dumps(summary))
+        self.assertNotIn(str(self.source),json.dumps(summary))
+    def test_recipient_summary_never_bypasses_digest_verification(self):
+        self.build()
+        with self.assertRaises(dp.DeliveryError):dp.verify(self.dest/'handoff.zip','0'*64,show_handoff=True)
+    def test_recipient_summary_option_requires_a_real_boolean(self):
+        for value in ['false',1,None]:
+            with self.subTest(value=value),self.assertRaisesRegex(dp.DeliveryError,'must be boolean'):
+                dp.verify(self.dest/'missing.zip',show_handoff=value)
+    def test_recipient_summary_cli_is_read_only(self):
+        result=self.build();archive=self.dest/'handoff.zip';before=archive.read_bytes()
+        run=subprocess.run([sys.executable,'-B',str(ROOT/'delivery_packager.py'),'verify',str(archive),'--expected-sha256',result['sha256'],'--show-handoff'],capture_output=True,text=True,timeout=10)
+        self.assertEqual(run.returncode,0,run.stderr)
+        report=json.loads(run.stdout);self.assertFalse(report['writes'])
+        self.assertEqual(report['handoff']['final_files'],['final/read me.txt'])
+        self.assertEqual(archive.read_bytes(),before)
+        self.assertEqual({p.name for p in self.dest.iterdir()},{'handoff.zip'})
     def test_source_change_after_preview_is_blocked(self):
         approval=self.preview()['approval_sha256'];(self.source/'draft.txt').write_text('A different draft.')
         with self.assertRaises(dp.DeliveryError):dp.build(self.source,self.plan,self.dest,'handoff.zip',approval)

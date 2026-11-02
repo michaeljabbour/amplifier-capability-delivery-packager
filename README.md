@@ -24,6 +24,10 @@ python3 delivery_packager.py verify outputs/repair-club.zip --expected-sha256 RE
 
 A changed file, plan, root, destination, filename or limit requires a new preview. Existing output is refused. Successful JSON has exit0; blocked input has exit2. Use `--max-total-bytes` to lower the64 MiB default; hard maximum512 MiB, at most 128 files. Metadata has a separate256 KiB bound. Empty files are valid. Nothing is extracted or executed.
 
+## Recipient's first check
+
+Use `python3 delivery_packager.py verify ARCHIVE.zip --expected-sha256 TRUSTED_DIGEST --show-handoff` to see the declared owner, editable and final file lists, unresolved limits and next action after the same byte checks. Obtain the digest through a trusted separate channel. The optional `handoff` JSON is a readable selection from the verified manifest, not proof of ownership, authority, accessibility or actual delivery. Verification remains read-only and the archive format is unchanged. Without `--show-handoff`, the existing result fields are unchanged.
+
 ## Contract and limits
 
 The [versioned plan](docs/CONTRACT.md) and [`examples/plan.json`](examples/plan.json) specify every field. `preview`, `build`, `verify` and `Limits` are importable standard-library APIs. The ZIP uses stored entries and fixed timestamps; this is not encryption, a digital signature, BagIt, RO-Crate or a large-media transfer service. POSIX protections do not promise protection against an arbitrary process running as the same user after creation. Windows native execution is unsupported; resulting ZIPs are conventional files.

@@ -272,7 +272,8 @@ def build(root, plan, destination, name, expected_plan_sha256, limits=Limits()):
         result['cleanup_warnings'] = cleanup
         return result
 
-def verify(archive_path, expected_sha256=None, limits=Limits()):
+def verify(archive_path, expected_sha256=None, limits=Limits(), *, show_handoff=False):
+    require(type(show_handoff) is bool, 'show_handoff must be boolean')
     path = Path(archive_path)
     parentfd, _ = _directory(path.parent)
     try:
@@ -322,7 +323,18 @@ def verify(archive_path, expected_sha256=None, limits=Limits()):
                 require(h.hexdigest() == row['sha256'], 'Payload SHA-256 mismatch')
             require(manifest['content_sha256'] == digest(encoded({'plan': manifest['plan'], 'files': rows})), 'Manifest content digest mismatch')
         require(_stamp(before) == _stamp(os.fstat(stream.fileno())), 'Archive changed during verification')
-    return {'status': 'verified', 'files': len(rows), 'sha256': sha, 'scope': 'Byte integrity and declared metadata, not authenticity, rights or accessibility', 'writes': False}
+    result = {'status': 'verified', 'files': len(rows), 'sha256': sha, 'scope': 'Byte integrity and declared metadata, not authenticity, rights or accessibility', 'writes': False}
+    if show_handoff:
+        plan = manifest['plan']
+        result['handoff'] = {
+            'title': plan['title'], 'declared_owner': plan['owner'],
+            'editable_files': [row['path'] for row in rows if row['role'] == 'editable'],
+            'final_files': [row['path'] for row in rows if row['role'] == 'final'],
+            'next_action': plan['next_action'], 'unresolved_limits': plan['unresolved_limits'],
+            'declared_destination': plan['destination'], 'declarations_verified': False,
+            'meaning': MEANING,
+        }
+    return result
 
 def load_plan(path):
     path = Path(path)
@@ -348,12 +360,13 @@ def main(argv=None):
             p.add_argument('--apply', action='store_true', required=True)
             p.add_argument('--expect-plan', required=True)
     p = commands.add_parser('verify'); p.add_argument('archive'); p.add_argument('--expected-sha256')
+    p.add_argument('--show-handoff', action='store_true', help='After byte checks, include declared owner, final/editable files, limits and next action')
     p.add_argument('--max-total-bytes', type=int, default=64 * 1024 * 1024)
     args = parser.parse_args(argv)
     try:
         limits = Limits(max_bytes=args.max_total_bytes)
         if args.command == 'verify':
-            result = verify(args.archive, args.expected_sha256, limits)
+            result = verify(args.archive, args.expected_sha256, limits, show_handoff=args.show_handoff)
         else:
             plan = load_plan(args.plan)
             result = preview(args.root, plan, args.destination, args.name, limits) if args.command == 'preview' else build(args.root, plan, args.destination, args.name, args.expect_plan, limits)
